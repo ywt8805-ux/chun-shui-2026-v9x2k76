@@ -41,15 +41,22 @@
 
         /* 階段 2: 霓虹珍奶 (參考妳的照片 20260203_183108.jpg) */
         .neon-cup {
-            width: 130px; height: 250px; border: 4px solid var(--neon-white);
-            border-radius: 10px 10px 80px 80px; position: relative;
-            box-shadow: 0 0 15px var(--neon-white); cursor: pointer;
+        width: 130px; height: 250px; 
+            border: 4px solid var(--neon-white);
+            border-radius: 10px 10px 80px 80px; 
+            position: relative; 
+            cursor: pointer;
+            /* 這裡增加了三層發光效果 */
+            box-shadow: 0 0 10px var(--neon-white), 
+                0 0 20px var(--neon-white), 
+                0 0 40px var(--neon-white);
             clip-path: polygon(0% 0%, 100% 0%, 85% 85%, 65% 100%, 35% 100%, 15% 85%);
         }
         .cup-logo { 
-            width: 35px; height: 35px; background: var(--neon-red); 
+            width: 35px; height: 35px; 
+            background: var(--neon-red); 
             position: absolute; top: 15%; left: 37%; 
-            box-shadow: 0 0 15px var(--neon-red); 
+            box-shadow: 0 0 15px var(--neon-red), 0 0 25px var(--neon-red);
             display: flex; align-items: center; justify-content: center; 
             font-size: 8px; font-weight: bold; color: white;
         }
