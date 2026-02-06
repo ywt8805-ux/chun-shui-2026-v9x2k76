@@ -287,19 +287,22 @@
 
         .hint {
     /* 絕對定位 */
-    position: absolute;
+    position: absolute!important;
     /* 關鍵修改：移到離底部 20px 的位置 */
-    bottom: -150px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: -100px!important;
+    left: 50%!important;
+    transform: translateX(-50%)!important;
     
-    /* 縮小字體並調淡顏色 */
-    font-size: 0.8rem;
-    color: rgba(255, 252, 225, 0.6); /* 亮米色帶透明度 */
+    width: 100%;
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255, 252, 225, 0.5); /* 淡淡的顏色，不干擾感言 */
+    text-shadow: none; /* 移除陰影讓它更邊緣化 */
     
     /* 保持閃爍動畫 */
     animation: blink 2s infinite;
     z-index: 50; /* 確保在最上層，但位置不遮擋 */
+    pointer-events: none;
 }
         @keyframes blink { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
         @keyframes wipeOutEffect {
