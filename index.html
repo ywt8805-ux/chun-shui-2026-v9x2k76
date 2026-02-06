@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>來自資工系學妹的驚喜 🧋</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #222;
+            --table-color: #e8d5b5;
+            --tea-color: #d2a679;
+            --neon-white: #fffce1;
+            --neon-red: #ff3131;
+        }
+
+        body {
+            margin: 0; background-color: var(--bg-dark);
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; font-family: "Microsoft JhengHei", sans-serif;
+            overflow: hidden; transition: background-color 1s;
+        }
+
+        .stage { display: none; flex-direction: column; align-items: center; width: 100%; position: relative; }
+        .active { display: flex; }
+
+        /* 階段 1: 雪克杯 */
+        .shaker {
+            width: 100px; height: 160px; background: linear-gradient(to right, #aaa, #eee, #aaa);
+            border-radius: 5px 5px 40px 40px; position: relative; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .shaker::after { content: ''; position: absolute; top: -30px; left: 15%; width: 70%; height: 30px; background: #bbb; border-radius: 5px; }
+        
+        .shake-anim { animation: shakeEffect 0.5s infinite; }
+        @keyframes shakeEffect {
+            0%, 100% { transform: rotate(0); }
+            25% { transform: rotate(15deg) translate(5px, -5px); }
+            75% { transform: rotate(-15deg) translate(-5px, 5px); }
+        }
+
+        /* 階段 2: 霓虹珍奶 (參考妳的照片 20260203_183108.jpg) */
+        .neon-cup {
+            width: 130px; height: 250px; border: 4px solid var(--neon-white);
+            border-radius: 10px 10px 80px 80px; position: relative;
+            box-shadow: 0 0 15px var(--neon-white); cursor: pointer;
+            clip-path: polygon(0% 0%, 100% 0%, 85% 85%, 65% 100%, 35% 100%, 15% 85%);
+        }
+        .cup-logo { 
+            width: 35px; height: 35px; background: var(--neon-red); 
+            position: absolute; top: 15%; left: 37%; 
+            box-shadow: 0 0 15px var(--neon-red); 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 8px; font-weight: bold; color: white;
+        }
+
+        /* 階段 3: 打翻現場 (參考妳的照片 1000006070.jpg) */
+        .spill-bg { background-color: var(--table-color) !important; }
+        .puddle {
+            width: 300px; height: 180px; background: var(--tea-color);
+            border-radius: 40% 60% 30% 70%; position: absolute;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.1); animation: expand 1s forwards;
+        }
+        @keyframes expand { from { transform: scale(0); } to { transform: scale(1); } }
+        
+        .pearl { width: 16px; height: 16px; background: #1a1a1a; border-radius: 50%; position: absolute; }
+        .ice { width: 22px; height: 22px; background: rgba(255,255,255,0.4); border-radius: 4px; position: absolute; }
+
+        .card {
+            background: white; padding: 20px; border-radius: 10px; width: 85%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); color: #5d4037; line-height: 1.6;
+            z-index: 10; font-size: 0.95rem; text-align: left;
+        }
+
+        /* 階段 4: 抹布擦拭 */
+        .rag {
+            width: 100px; height: 80px; background: #fff; border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2); position: absolute; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-weight: bold; color: #999;
+            z-index: 100;
+        }
+        .calligraphy {
+            font-family: 'Noto Serif TC', serif; font-size: 4.5rem;
+            background: linear-gradient(to bottom, #ffd700, #ff8c00);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            opacity: 0; transform: scale(0.5); filter: drop-shadow(0 0 10px rgba(0,0,0,0.2));
+        }
+        .fly-in { animation: flyInCalligraphy 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        @keyframes flyInCalligraphy { to { opacity: 1; transform: scale(1); } }
+
+        .hint { margin-top: 30px; color: #888; font-size: 0.85rem; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div id="stage1" class="stage active" onclick="startShaking()">
+        <div class="shaker" id="shakerObj"></div>
+        <p class="hint">（點擊雪克杯開始搖茶）</p>
+    </div>
+
+    <div id="stage2" class="stage" onclick="triggerSpill()">
+        <div class="neon-cup">
+            <div class="cup-logo">春水</div>
+        </div>
+        <p class="hint">（珍奶好了！點擊品嚐一下...）</p>
+    </div>
+
+    <div id="stage3" class="stage">
+        <div class="puddle">
+            <div class="pearl" style="top:10%; left:20%;"></div>
+            <div class="pearl" style="bottom:20%; right:15%;"></div>
+            <div class="ice" style="top:40%; left:10%;"></div>
+            <div class="card">
+                <p>夥伴們、店長：</p>
+                <p>謝謝大家這一個多月的照顧，讓我從新手慢慢熟悉。</p>
+                <p>雖然中間有失誤，但謝謝大家願意教我，真的很溫暖！</p>
+                <p><b>我要先回逢甲資工練等了，大家暑假見！</b></p>
+            </div>
+        </div>
+        <div class="rag" id="rag" onclick="startWiping()">抹布</div>
+        <p class="hint" style="position:absolute; bottom:10%;">（點擊抹布收拾桌面）</p>
+    </div>
+
+    <div id="stage4" class="stage">
+        <h1 id="finalText" class="calligraphy">新年快樂</h1>
+        <p style="color:#5d4037; margin-top:20px; font-weight:bold;">資工系學妹 [妳的名字] 敬上</p>
+    </div>
+
+    <script>
+        function startShaking() {
+            const shaker = document.getElementById('shakerObj');
+            shaker.classList.add('shake-anim');
+            setTimeout(() => {
+                document.getElementById('stage1').classList.remove('active');
+                document.getElementById('stage2').classList.add('active');
+            }, 1500);
+        }
+
+        function triggerSpill() {
+            document.body.style.animation = "shakeEffect 0.1s infinite";
+            setTimeout(() => {
+                document.body.style.animation = "none";
+                document.body.classList.add('spill-bg');
+                document.getElementById('stage2').classList.remove('active');
+                document.getElementById('stage3').classList.add('active');
+            }, 500);
+        }
+
+        function startWiping() {
+            const rag = document.getElementById('rag');
+            rag.style.transition = "all 1s ease";
+            rag.style.transform = "translate(300px, -200px) rotate(360deg)";
+            rag.style.opacity = "0";
+            
+            setTimeout(() => {
+                document.getElementById('stage3').classList.remove('active');
+                document.getElementById('stage4').classList.add('active');
+                document.getElementById('finalText').classList.add('fly-in');
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
