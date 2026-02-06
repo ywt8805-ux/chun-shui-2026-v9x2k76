@@ -9,7 +9,7 @@
         :root {
             --bg-dark: #222;
             --table-color: #e8d5b5;
-            --tea-color: #e8d3be;
+            --tea-color: #d2a679;
             --neon-white: #fffce1;
             --neon-red: #ff3131;
         }
@@ -162,7 +162,7 @@
    /* 階段 3: 真實打翻現場 (參考妳提供的照片 image_10.png) */
 .spill-bg { 
     /* 模擬木桌的顏色 */
-    background-color: #8b5a2b !important; 
+    background-color: #e2bd9a !important; 
     /* 可以加上木紋圖片背景會更像 */
     /* background-image: url('wood-texture.jpg'); */
     background-size: cover;
@@ -207,7 +207,7 @@
     
     text-align: left; /* 文字居中 */
     font-weight: bold;
-    line-height: 0.8;
+    line-height: 1.0;
     z-index: 20; /* 確保文字在最上層 */
     
     /* 絕對定位在茶湯中央 */
@@ -280,7 +280,7 @@
             font-family: 'Noto Serif TC', serif; font-size: 4.5rem;
             background: linear-gradient(to bottom, #ff0000, #e3e1bd);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            opacity: 0; transform: scale(0.5); filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            opacity: 0; transform: scale(0.5); filter: drop-shadow(0 0 12px rgba(0,0,0,0.2));
         }
         .fly-in { animation: flyInCalligraphy 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
         @keyframes flyInCalligraphy { to { opacity: 1; transform: scale(1); } }
