@@ -189,37 +189,33 @@
     100% { transform: scale(1); opacity: 1; }
 }
 
-/* 珍珠 (更寫實) */
+/* 1. 珍珠 (放在中後層) */
 .pearl {
-    width: 18px; height: 18px;
-    /* 深黑色帶光澤 */
-    background: radial-gradient(circle at 30% 30%, #555 0%, #1a1a1a 70%);
-    border-radius: 50%; position: absolute;
-    /* 珍珠的陰影 */
+    /* ... 其他屬性保持不變 ... */
     box-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+    z-index: 3; /* 新增這一行 */
 }
 
-/* 冰塊 (方形且透明) */
+/* 2. 冰塊 (放在中後層) */
 .ice {
-    width: 24px; height: 24px;
-    /* 透明的冰塊質感 */
-    background: rgba(255,255,255,0.3);
-    border-radius: 3px; position: absolute;
-    /* 冰塊的邊緣反光 */
-    border: 1px solid rgba(255,255,255,0.6);
-    box-shadow: inset 0 0 5px rgba(255,255,255,0.5), 1px 1px 3px rgba(0,0,0,0.2);
-    /* 隨機旋轉角度 */
+    /* ... 其他屬性保持不變 ... */
     transform: rotate(calc(var(--r, 0) * 1deg));
+    z-index: 3; /* 新增這一行 */
 }
 
-/* 傾倒的杯子 (在打翻階段顯示) */
+/* 3. 卡片 (這最重要，要放在最上層！) */
+.card {
+    background: white; padding: 20px; border-radius: 10px; width: 85%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); color: #5d4037; line-height: 1.6;
+    font-size: 0.95rem; text-align: left;
+    z-index: 10; /* 確保這個數字最大 */
+}
+
+/* 4. 傾倒的杯子 (放在最底層，卡片後面) */
 .spilled-cup {
-    position: absolute;
-    top: -80px; left: 50%;
-    transform: translateX(-50%) rotate(70deg); /* 傾倒的角度 */
-    opacity: 0;
+    /* ... 其他屬性保持不變 ... */
     animation: cupFall 1s cubic-bezier(0.25, 0.8, 0.25, 1) forwards 0.2s;
-    z-index: 5;
+    z-index: 2; /* 修改這裡：改成比卡片小的數字 */
 }
 @keyframes cupFall {
     0% { top: -150px; opacity: 0; }
@@ -246,6 +242,10 @@
     transform: scale(1.1); /* 滑鼠移上去稍微放大 */
     background: #f0f0f0;
 }
+.rag.scrubbing {
+    /* 執行擦拭動畫，時間與茶湯消失同步 (1.5s) */
+    animation: ragScrubAndFly 1.5s ease-in-out forwards;
+}
         .calligraphy {
             font-family: 'Noto Serif TC', serif; font-size: 4.5rem;
             background: linear-gradient(to bottom, #ffd700, #ff8c00);
@@ -257,6 +257,39 @@
 
         .hint { margin-top: 30px; color: #888; font-size: 0.85rem; animation: blink 1.5s infinite; }
         @keyframes blink { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+        @keyframes wipeOutEffect {
+    0% { 
+        transform: scale(1); 
+        opacity: 1; 
+        filter: blur(0px); /* 一開始是清晰的 */
+    }
+    100% { 
+        transform: scale(0.1); /* 縮到幾乎不見 */
+        opacity: 0; /* 完全透明 */
+        filter: blur(10px); /* 加一點模糊感，更有「擦掉」的感覺 */
+    }
+}
+
+/* 用來觸發茶湯消失的 class */
+.puddle.wiping-out {
+    /* 執行上面定義的動畫，持續 1.5 秒 */
+    animation: wipeOutEffect 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    /* 確保裡面的卡片和杯子不會跑版 */
+    transform-origin: center center;
+}
+
+
+/* 定義抹布「來回擦拭後飛走」的動作 */
+@keyframes ragScrubAndFly {
+    0% { transform: translate(0, 0) rotate(0); }
+    20% { transform: translate(-120px, -60px) rotate(-30deg); } /* 往左上擦 */
+    40% { transform: translate(100px, 40px) rotate(30deg); }    /* 往右下擦 */
+    60% { transform: translate(-80px, 80px) rotate(-15deg); }   /* 往左下擦 */
+    100% { 
+        transform: translate(500px, -500px) rotate(720deg) scale(0.5); /* 旋轉飛出螢幕 */
+        opacity: 0; 
+    }
+}
     </style>
 </head>
 <body>
@@ -330,22 +363,26 @@
     }, 300);
 }
 
-        function startWiping() {
+     function startWiping() {
     const rag = document.getElementById('rag');
+    // 獲取茶湯容器 (它包含了卡片、杯子、珍珠冰塊)
+    const puddleContainer = document.querySelector('.puddle');
     
-    // 抹布往中間大面積擦拭的動作
-    rag.style.transform = "translate(-200px, -150px) rotate(-45deg) scale(3)";
-    rag.style.opacity = "0";
+    // 1. 讓抹布開始執行「來回擦拭」的動畫
+    rag.classList.add('scrubbing');
+
+    // 2. 同時讓茶湯開始執行「縮小淡出」的動畫
+    // 使用 setTimeout 稍微延遲一點點，讓抹布先動起來感覺更自然
+    setTimeout(() => {
+        puddleContainer.classList.add('wiping-out');
+    }, 100);
     
-    // 讓原本的奶茶灘和卡片一起變淡消失
-    document.querySelector('.puddle').style.transition = "opacity 1s ease";
-    document.querySelector('.puddle').style.opacity = "0";
-    
+    // 3. 等待動畫結束 (1.5秒後)，切換到最後的祝福畫面
     setTimeout(() => {
         document.getElementById('stage3').classList.remove('active');
         document.getElementById('stage4').classList.add('active');
         document.getElementById('finalText').classList.add('fly-in');
-    }, 1200);
+    }, 1600); // 設定 1.6 秒，確保動畫完全跑完
 }
     </script>
 </body>
