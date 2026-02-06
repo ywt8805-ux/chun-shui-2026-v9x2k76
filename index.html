@@ -169,17 +169,20 @@
     transition: background-color 0.5s ease;
 }
 
-/* 奶茶灘 */
+/* 1. 寫實的茶湯 (Puddle) */
 .puddle {
-    width: 350px; height: 220px;
-    /* 奶茶的顏色漸層和光澤 */
-    background: linear-gradient(135deg, #e8d5b5 0%, #d2a679 60%, #c09060 100%);
-    /* 不規則的形狀，模擬液體擴散 */
-    border-radius: 60% 40% 70% 30% / 50% 70% 30% 50%;
-    position: absolute;
+    width: 380px; /* 稍微加大一點 */
+    height: 240px;
+    /* 使用放射狀漸層來模擬液體的濃淡和光澤 */
+    background: radial-gradient(ellipse at center, #e0c0a0 0%, #d2a679 50%, #b08060 100%);
+    /* 更不規則的形狀，模擬液體潑灑 */
+    border-radius: 45% 55% 40% 60% / 55% 40% 60% 45%;
+    position: relative; /* 改為 relative，讓裡面的文字可以絕對定位 */
     display: flex; justify-content: center; align-items: center;
-    /* 邊緣的液體張力感 */
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.2);
+    /* 增加液體的厚度感和邊緣濕潤的陰影 */
+    box-shadow: 
+        inset 0 5px 20px rgba(255,255,255,0.3), /* 內部高光 */
+        0 5px 15px rgba(0,0,0,0.2); /* 外部陰影 */
     /* 初始狀態：縮小且透明 */
     transform: scale(0); opacity: 0;
     animation: spillExpand 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
@@ -189,37 +192,64 @@
     100% { transform: scale(1); opacity: 1; }
 }
 
-/* 1. 珍珠 (放在中後層) */
-.pearl {
-    /* ... 其他屬性保持不變 ... */
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.4);
-    z-index: 3; /* 新增這一行 */
-}
-
-/* 2. 冰塊 (放在中後層) */
-.ice {
-    /* ... 其他屬性保持不變 ... */
-    transform: rotate(calc(var(--r, 0) * 1deg));
-    z-index: 3; /* 新增這一行 */
-}
-
-/* 3. 卡片 (這最重要，要放在最上層！) */
+/* 2. 文字直接在茶湯上 (Card) */
 .card {
-    background: white; padding: 20px; border-radius: 10px; width: 85%;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1); color: #5d4037; line-height: 1.6;
-    font-size: 0.95rem; text-align: left;
-    z-index: 10; /* 確保這個數字最大 */
+    /* 移除白色背景和陰影 */
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    width: 90%;
+    
+    /* 文字顏色改為亮米色，並加上陰影提高可讀性 */
+    color: #fffce1;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+    
+    text-align: center; /* 文字居中 */
+    font-weight: bold;
+    line-height: 1.7;
+    z-index: 20; /* 確保文字在最上層 */
+    
+    /* 絕對定位在茶湯中央 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-/* 4. 傾倒的杯子 (放在最底層，卡片後面) */
+/* 3. 傾倒的杯子 (Spilled Cup) */
 .spilled-cup {
-    /* ... 其他屬性保持不變 ... */
-    animation: cupFall 1s cubic-bezier(0.25, 0.8, 0.25, 1) forwards 0.2s;
-    z-index: 2; /* 修改這裡：改成比卡片小的數字 */
+    /* 繼承原本霓虹杯的樣式，但移除點擊手勢 */
+    cursor: default;
+    /* 絕對定位在畫面左上方 */
+    position: absolute;
+    top: -80px;
+    left: 20px;
+    /* 關鍵：傾倒的角度 */
+    transform: rotate(60deg);
+    z-index: 5; /* 在茶湯上面，文字下面 */
+    opacity: 0; /* 一開始隱藏 */
+    /* 杯子掉落的動畫 */
+    animation: cupFall 0.8s ease-out forwards 0.3s; /* 延遲 0.3s 開始 */
 }
+
 @keyframes cupFall {
-    0% { top: -150px; opacity: 0; }
-    100% { top: -80px; opacity: 1; }
+    from { 
+        top: -150px; 
+        opacity: 0; 
+        transform: rotate(0deg); 
+    }
+    to { 
+        top: -80px; 
+        opacity: 1; 
+        transform: rotate(60deg); 
+    }
+}
+
+/* 調整珍珠和冰塊的層級，讓它們在文字下方 */
+.pearl, .ice {
+    z-index: 10;
+    opacity: 0.8; /* 稍微透明一點，融入茶湯 */
 }
 
         /* 階段 4: 抹布擦拭 */
@@ -324,10 +354,10 @@
         <div class="ice" style="top:45%; right:20%; --r: 30;"></div>
         <div class="ice" style="bottom:40%; right:25%; --r: -5;"></div>
             <div class="card">
-                <p>夥伴們、店長：</p>
-                <p>謝謝大家這一個多月的照顧，讓我從新手慢慢熟悉。</p>
-                <p>雖然中間有失誤，但謝謝大家願意教我，真的很溫暖！</p>
-                <p><b>我要先回逢甲資工練等了，大家暑假見！</b></p>
+                <p>夥伴們：</p>
+                <p>謝謝大家這一個多月來的照顧，讓我從新手慢慢熟悉工作。</p>
+                <p>中間雖然有失誤，但很感謝大家都願意耐心教我，真的讓人覺得很溫暖。</p>
+                <p><b>新的一年祝大家平安順心、工作順利，以及最重要的......</b></p>
             </div>
         </div>
         <div class="rag" id="rag" onclick="startWiping()">抹布</div>
@@ -335,8 +365,8 @@
     </div>
 
     <div id="stage4" class="stage">
-        <h1 id="finalText" class="calligraphy">新年快樂</h1>
-        <p style="color:#5d4037; margin-top:20px; font-weight:bold;">資工系學妹 [妳的名字] 敬上</p>
+        <h1 id="finalText" class="calligraphy">新年快樂!</h1>
+        <p style="color:#5d4037; margin-top:20px; font-weight:bold;">廷廷 敬上</p>
     </div>
 
     <script>
